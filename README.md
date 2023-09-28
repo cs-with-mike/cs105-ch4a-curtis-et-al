@@ -4,11 +4,11 @@ Chapter 4 Assignment A
 
 ## Author Information
 - Curtis Barnhart, cbarnhart@westmont.edu
-- **Thomas McTankengine** tmctankengine@westmont.edu
+- Joshua Nielsen jnielsen@westmont.edu
 - **Ovenly McEasybake** omceasybake@westmont.edu
 
 ## Overview
-(TODO: Describe in a sentence or two what this assignment is.)
+This program is a
 
 ## Design Notes
 (TODO: Write any notable design decisions you made as you were working on this assignment.)
