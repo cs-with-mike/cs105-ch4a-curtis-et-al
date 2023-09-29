@@ -1,6 +1,9 @@
 #include <iostream>
 #include <fstream>
 
+enum states {OUTSIDE, INTEGER, IDENTIFIER};
+enum ltypes {INT, IDT, ASN, ADD, SUB, MUL, DIV, LPR, RPR};
+
 std::ifstream *open_file(int argc, char *argv[]) {
     std::ifstream *reader;
 
@@ -26,12 +29,19 @@ std::ifstream *open_file(int argc, char *argv[]) {
     return reader;
 }
 
+void lexeme_out(std::stringstream *lexeme, ltypes ltype, std::ofstream *writer) {
+    std::str lexstr = lexeme.str();
+    static std::string types[] = {"INT_LIT    ", "IDENT    ", "ASSIGN_OP  ", "ADD_OP     ", "SUB_OP     ", "MULT_OP     ", "DIV_OP     ", "LEFT_PAREN ", "RIGHT_PAREN"};
+    static std::string token_dec = "Next token is:";
+    static std::string lexem_dec = " | Next lexeme is ";
+    writer->write(lexstr->c_str(), lexstr->length);
+}
+
 int main(int argc, char *argv[]) {
     std::ifstream *reader;
     char c;
 
     // Define states for our finite state machine
-    enum states {OUTSIDE, INT, IDENT};
     states state = OUTSIDE;
 
     // Make sure that the file provided could actually be read
@@ -40,15 +50,22 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     
-    while ((c = reader->get()) != EOF) {
+    // Finite state machine for parsing begins with iterating over every char in file
+    while (true) {
+        c = reader->get();
+        if (reader->rdstate() & std::ios_base::eofbit) {
+            break;  // If we hit eof char, we are done
+        }
         switch (state) {
             case OUTSIDE:
                 break;
-            case INT:
+            case INTEGER:
                 break;
-            case IDENT:
+            case IDENTIFIER:
                 break;
         }
     }
+
+    std::cout << "Parsing complete" << std::endl;
 }
 
