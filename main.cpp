@@ -40,9 +40,11 @@ void lexeme_out(std::stringstream *lexeme, ltypes ltype, std::ofstream *writer) 
 }
 
 int main(int argc, char *argv[]) {
+    std::ofstream writer;
     std::ifstream *reader;
-    std::stringstream char_buffer = std::stringstream("");
+    std::stringstream char_buffer("");
     char c;
+
 
     //Array of ltypes
     ltypes op_lookup[62];
@@ -53,6 +55,11 @@ int main(int argc, char *argv[]) {
     op_lookup['-'] = SUB;
     op_lookup['/'] = DIV;
     op_lookup['='] = ASN;
+
+    // Open a file to be written to
+    writer.open("out.txt");
+    std::cout << "Opening write file" << std::endl;
+
 
     // Define states for our finite state machine
     states state = OUTSIDE;
@@ -74,7 +81,7 @@ int main(int argc, char *argv[]) {
                 break;
             case INTEGER:
                 if (isalpha(c)) {
-                    lexeme_out(&char_buffer, INT, ); //TODO: File to write to
+                    lexeme_out(&char_buffer, INT, &writer); //TODO: File to write to
                     char_buffer.str("");
                     char_buffer << c;
                     state = IDENTIFIER;
@@ -82,16 +89,16 @@ int main(int argc, char *argv[]) {
                 else if (isdigit(c)) {
                     char_buffer << c;
                 }
-                else if ((c <= '(' && c >= '/') || c == '=') {
-                    lexeme_out(&char_buffer, INT, ); //TODO: File to write to
+                else if ((c >= '(' && c <= '/') || c == '=') {
+                    lexeme_out(&char_buffer, INT, &writer); //TODO: File to write to
                     char_buffer.str("");
                     char_buffer << c;
-                    lexeme_out(&char_buffer, op_lookup[c], ); //TODO: File to write to
+                    lexeme_out(&char_buffer, op_lookup[c], &writer); //TODO: File to write to
                     char_buffer.str("");
                     state = OUTSIDE;
                 }
                 else{
-                    lexeme_out(&char_buffer, INT, ); //TODO: File to write to
+                    lexeme_out(&char_buffer, INT, &writer); //TODO: File to write to
                     char_buffer.str("");
                     state = OUTSIDE;
                 }
@@ -99,16 +106,16 @@ int main(int argc, char *argv[]) {
                 if (isalpha(c) || isdigit(c)) {
                     char_buffer << c;
                 }
-                else if ((c <= '(' && c >= '/') || c == '=') {
-                    lexeme_out(&char_buffer, IDT, ); //TODO: File to write to
+                else if ((c >= '(' && c <= '/') || c == '=') {
+                    lexeme_out(&char_buffer, IDT, &writer); //TODO: File to write to
                     char_buffer.str("");
                     char_buffer << c;
-                    lexeme_out(&char_buffer, op_lookup[c], ); //TODO: File to write to
+                    lexeme_out(&char_buffer, op_lookup[c], &writer); //TODO: File to write to
                     char_buffer.str("");
                     state = OUTSIDE;
                 }
                 else{
-                    lexeme_out(&char_buffer, IDT, ); //TODO: File to write to
+                    lexeme_out(&char_buffer, IDT, &writer); //TODO: File to write to
                     char_buffer.str("");
                     state = OUTSIDE;
                 }
@@ -116,5 +123,7 @@ int main(int argc, char *argv[]) {
     }
 
     std::cout << "Parsing complete" << std::endl;
+    std::cout << "Closing write file" << std::endl;
+    writer.close();
 }
 
