@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cctype>
 
 enum states {OUTSIDE, INTEGER, IDENTIFIER};
 enum ltypes {INT, IDT, ASN, ADD, SUB, MUL, DIV, LPR, RPR};
@@ -61,7 +62,41 @@ int main(int argc, char *argv[]) {
             case OUTSIDE:
                 break;
             case INTEGER:
-                break;
+                if (isalpha(c)) {
+                    lexeme_out(&char_buffer, INT, ); //TODO: File to write to
+                    char_buffer.str("");
+                    char_buffer << c;
+                    state = IDENTIFIER;
+                }
+                else if (isdigit(c)) {
+                    char_buffer << c;
+                }
+                else if ((c <= '(' && c >= '/') || c == '=') {
+                    lexeme_out(&char_buffer, INT, ); //TODO: File to write to
+                    char_buffer.str("");
+                    char_buffer << c;
+
+                    if (c == '(') {
+                        lexeme_out(&char_buffer, LEFT_PAREN, ); //TODO: File to write to
+                        char_buffer.str("");
+                        state = OUTSIDE;
+                    }
+                    else  if (c == ')') {
+                        lexeme_out(&char_buffer, RIGHT_PAREN, ); //TODO: File to write to
+                        char_buffer.str("");
+                        state = OUTSIDE;
+                    }
+                    else  if (c == '*') {
+                        lexeme_out(&char_buffer, MULT_OP, ); //TODO: File to write to
+                        char_buffer.str("");
+                        state = OUTSIDE;
+                    }
+                }
+                else{
+                    lexeme_out(&char_buffer, INT, ); //TODO: File to write to
+                    char_buffer.str("");
+                    state = OUTSIDE;
+                }
             case IDENTIFIER:
                 break;
         }
