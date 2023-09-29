@@ -5,7 +5,7 @@ Chapter 4 Assignment A
 ## Author Information
 - Curtis Barnhart, cbarnhart@westmont.edu
 - Joshua Nielsen jnielsen@westmont.edu
-- **Ovenly McEasybake** omceasybake@westmont.edu
+- Meghan Nugent mnugent@my.westmont.edu
 
 ## Overview
 This program is a
