@@ -39,9 +39,14 @@ void lexeme_out(std::stringstream *lexeme, ltypes ltype, std::ofstream *writer) 
 }
 
 int main(int argc, char *argv[]) {
+    std::ofstream writer;
     std::ifstream *reader;
-    std::stringstream char_buffer = std::stringstream("");
+    std::stringstream char_buffer("");
     char c;
+
+    // Open a file to be written to
+    writer.open("out.txt");
+    std::cout << "Opening write file" << std::endl;
 
     // Define states for our finite state machine
     states state = OUTSIDE;
@@ -69,5 +74,7 @@ int main(int argc, char *argv[]) {
     }
 
     std::cout << "Parsing complete" << std::endl;
+    std::cout << "Closing write file" << std::endl;
+    writer.close();
 }
 
