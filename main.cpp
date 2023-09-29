@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 enum states {OUTSIDE, INTEGER, IDENTIFIER};
 enum ltypes {INT, IDT, ASN, ADD, SUB, MUL, DIV, LPR, RPR};
@@ -30,16 +31,16 @@ std::ifstream *open_file(int argc, char *argv[]) {
 }
 
 void lexeme_out(std::stringstream *lexeme, ltypes ltype, std::ofstream *writer) {
-    std::str lexstr = lexeme.str();
+    std::string lexstr = lexeme->str();
     static std::string types[] = {"INT_LIT    ", "IDENT    ", "ASSIGN_OP  ", "ADD_OP     ", "SUB_OP     ", "MULT_OP     ", "DIV_OP     ", "LEFT_PAREN ", "RIGHT_PAREN"};
     static std::string token_dec = "Next token is:";
     static std::string lexem_dec = " | Next lexeme is ";
-    writer->write(lexstr->c_str(), lexstr->length);
+    writer->write(lexstr.c_str(), lexstr.length());
 }
 
 int main(int argc, char *argv[]) {
     std::ifstream *reader;
-    std::stringstream char_buffer;
+    std::stringstream char_buffer = std::stringstream("");
     char c;
 
     // Define states for our finite state machine
