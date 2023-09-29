@@ -39,6 +39,7 @@ void lexeme_out(std::stringstream *lexeme, ltypes ltype, std::ofstream *writer) 
 
 int main(int argc, char *argv[]) {
     std::ifstream *reader;
+    std::stringstream char_buffer;
     char c;
 
     // Define states for our finite state machine
