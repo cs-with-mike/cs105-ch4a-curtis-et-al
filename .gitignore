@@ -1,2 +1,4 @@
 cmake-build-debug
 .DS_Store
+RELEASE_BUILD
+DEBUG_BUILD
