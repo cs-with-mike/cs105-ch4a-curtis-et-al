@@ -1,0 +1,3 @@
+/home/curtisb/Code/cs105-ch4a-curtis-et-al/BUILD/CMakeFiles/tokki.dir
+/home/curtisb/Code/cs105-ch4a-curtis-et-al/BUILD/CMakeFiles/edit_cache.dir
+/home/curtisb/Code/cs105-ch4a-curtis-et-al/BUILD/CMakeFiles/rebuild_cache.dir
