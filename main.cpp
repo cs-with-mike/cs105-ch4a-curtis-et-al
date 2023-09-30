@@ -32,19 +32,34 @@ std::ifstream *open_file(int argc, char *argv[]) {
 }
 
 void lexeme_out(std::stringstream *lexeme, ltypes ltype, std::ofstream *writer) {
+    static std::string types[] = {
+        "    INT_LIT",
+        "      IDENT",
+        "  ASSIGN_OP",
+        "     ADD_OP",
+        "     SUB_OP",
+        "    MULT_OP",
+        "     DIV_OP",
+        " LEFT_PAREN",
+        "RIGHT_PAREN",
+    };
+    char token_dec[] = "Next token is:";
+    char lexem_dec[] = " | Next lexeme is ";
+    char newline[] = "\n";
     std::string lexstr = lexeme->str();
-    static std::string types[] = {"INT_LIT    ", "IDENT    ", "ASSIGN_OP  ", "ADD_OP     ", "SUB_OP     ", "MULT_OP     ", "DIV_OP     ", "LEFT_PAREN ", "RIGHT_PAREN"};
-    static std::string token_dec = "Next token is:";
-    static std::string lexem_dec = " | Next lexeme is ";
+    writer->write(token_dec, 14);
+    writer->write(types[ltype].c_str(), 11);
+    writer->write(lexem_dec, 18);
     writer->write(lexstr.c_str(), lexstr.length());
+    writer->write(newline, 1);
 }
 
 int main(int argc, char *argv[]) {
+    states state = OUTSIDE;
     std::ofstream writer;
     std::ifstream *reader;
     std::stringstream char_buffer("");
     char c;
-
 
     //Array of ltypes
     ltypes op_lookup[62];
@@ -56,20 +71,16 @@ int main(int argc, char *argv[]) {
     op_lookup['/'] = DIV;
     op_lookup['='] = ASN;
 
-    // Open a file to be written to
-    writer.open("out.txt");
-    std::cout << "Opening write file" << std::endl;
-
-
-    // Define states for our finite state machine
-    states state = OUTSIDE;
-
     // Make sure that the file provided could actually be read
     if (!(reader = open_file(argc, argv))) {
         std::cout << "Program terminating" << std::endl;
         return 1;
     }
-    
+
+    // Open a file to be written to
+    writer.open("out.txt");
+    std::cout << "Opening write file" << std::endl;
+
     // Finite state machine for parsing begins with iterating over every char in file
     while (true) {
         c = reader->get();
@@ -93,7 +104,7 @@ int main(int argc, char *argv[]) {
                 break;
             case INTEGER:
                 if (isalpha(c)) {
-                    lexeme_out(&char_buffer, INT, &writer); //TODO: File to write to
+                    lexeme_out(&char_buffer, INT, &writer);
                     char_buffer.str("");
                     char_buffer << c;
                     state = IDENTIFIER;
@@ -102,36 +113,49 @@ int main(int argc, char *argv[]) {
                     char_buffer << c;
                 }
                 else if ((c >= '(' && c <= '/') || c == '=') {
-                    lexeme_out(&char_buffer, INT, &writer); //TODO: File to write to
+                    lexeme_out(&char_buffer, INT, &writer);
                     char_buffer.str("");
                     char_buffer << c;
-                    lexeme_out(&char_buffer, op_lookup[c], &writer); //TODO: File to write to
+                    lexeme_out(&char_buffer, op_lookup[c], &writer);
                     char_buffer.str("");
                     state = OUTSIDE;
                 }
                 else{
-                    lexeme_out(&char_buffer, INT, &writer); //TODO: File to write to
+                    lexeme_out(&char_buffer, INT, &writer);
                     char_buffer.str("");
                     state = OUTSIDE;
                 }
+                break;
             case IDENTIFIER:
                 if (isalpha(c) || isdigit(c)) {
                     char_buffer << c;
                 }
                 else if ((c >= '(' && c <= '/') || c == '=') {
-                    lexeme_out(&char_buffer, IDT, &writer); //TODO: File to write to
+                    lexeme_out(&char_buffer, IDT, &writer);
                     char_buffer.str("");
                     char_buffer << c;
-                    lexeme_out(&char_buffer, op_lookup[c], &writer); //TODO: File to write to
+                    lexeme_out(&char_buffer, op_lookup[c], &writer);
                     char_buffer.str("");
                     state = OUTSIDE;
                 }
                 else{
-                    lexeme_out(&char_buffer, IDT, &writer); //TODO: File to write to
+                    lexeme_out(&char_buffer, IDT, &writer);
                     char_buffer.str("");
                     state = OUTSIDE;
                 }
+                break;
         }
+    }
+    
+    switch (state) {
+        case INTEGER:
+            lexeme_out(&char_buffer, INT, &writer);
+            break;
+        case IDENTIFIER:
+            lexeme_out(&char_buffer, IDT, &writer);
+            break;
+        default:
+            break;
     }
 
     std::cout << "Parsing complete" << std::endl;
