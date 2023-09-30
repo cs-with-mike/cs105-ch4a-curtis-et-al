@@ -2,7 +2,7 @@
 # Authors:
 #  - Curtis Barnhart, cbarnhart@westmont.edu
 #  - Thomas McTankengine, tmctankengine@westmont.edu
-#  - Ovenly McEasybake, omceasybake@westmont.edu
+#  - Joshua Nielsen, jnielsen@westmont.edu
 
 # Run any commands necessary to set up your language's runtime environment here.
 # If the runtime is expected to be present on Ubuntu by default, then do nothing.
