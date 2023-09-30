@@ -12,10 +12,10 @@ std::ifstream *open_file(int argc, char *argv[]) {
      // Make sure that the correct number of arguments is provided to our program
     switch (argc) {
         case 2:
-            std::cout << "Filename received" << std::endl;
+            //std::cout << "Filename received" << std::endl;
             break;
         default:
-            std::cout << "This program takes one argument which is a filename." << std::endl;
+            //std::cout << "This program takes one argument which is a filename." << std::endl;
             return nullptr;
     }
 
@@ -23,10 +23,10 @@ std::ifstream *open_file(int argc, char *argv[]) {
     reader = new std::ifstream();
     reader->open(argv[1]);
     if (reader->rdstate() & std::ios_base::failbit) {
-        std::cout << "File could not be opened. Please enter a valid file." << std::endl;
+        //std::cout << "File could not be opened. Please enter a valid file." << std::endl;
         return nullptr;
     } else {
-        std::cout << "Parsing file..." << std::endl;
+        //std::cout << "Parsing file..." << std::endl;
     }
     return reader;
 }
@@ -73,13 +73,13 @@ int main(int argc, char *argv[]) {
 
     // Make sure that the file provided could actually be read
     if (!(reader = open_file(argc, argv))) {
-        std::cout << "Program terminating" << std::endl;
+        //std::cout << "Program terminating" << std::endl;
         return 1;
     }
 
     // Open a file to be written to
     writer.open("out.txt");
-    std::cout << "Opening write file" << std::endl;
+    //std::cout << "Opening write file" << std::endl;
 
     // Finite state machine for parsing begins with iterating over every char in file
     while (true) {
@@ -158,8 +158,8 @@ int main(int argc, char *argv[]) {
     char ending[] = "Next token is:         EOF | Next lexeme is EOF\n";
     writer.write(ending, 48);
 
-    std::cout << "Parsing complete" << std::endl;
-    std::cout << "Closing write file" << std::endl;
+    //std::cout << "Parsing complete" << std::endl;
+    //std::cout << "Closing write file" << std::endl;
     writer.close();
 }
 
