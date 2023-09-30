@@ -33,22 +33,22 @@ std::ifstream *open_file(int argc, char *argv[]) {
 
 void lexeme_out(std::stringstream *lexeme, ltypes ltype, std::ofstream *writer) {
     static std::string types[] = {
-        "    INT_LIT",
-        "      IDENT",
-        "  ASSIGN_OP",
-        "     ADD_OP",
-        "     SUB_OP",
-        "    MULT_OP",
-        "     DIV_OP",
-        " LEFT_PAREN",
-        "RIGHT_PAREN",
+        "     INT_LIT",
+        "       IDENT",
+        "   ASSIGN_OP",
+        "      ADD_OP",
+        "      SUB_OP",
+        "     MULT_OP",
+        "      DIV_OP",
+        "  LEFT_PAREN",
+        " RIGHT_PAREN",
     };
     char token_dec[] = "Next token is:";
     char lexem_dec[] = " | Next lexeme is ";
     char newline[] = "\n";
     std::string lexstr = lexeme->str();
     writer->write(token_dec, 14);
-    writer->write(types[ltype].c_str(), 11);
+    writer->write(types[ltype].c_str(), 12);
     writer->write(lexem_dec, 18);
     writer->write(lexstr.c_str(), lexstr.length());
     writer->write(newline, 1);
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
             lexeme_out(&char_buffer, IDT, &writer);
             break;
     }
-    char ending[] = "next token is:         EOF | next lexeme is EOF\n";
+    char ending[] = "Next token is:         EOF | Next lexeme is EOF\n";
     writer.write(ending, 48);
 
     std::cout << "Parsing complete" << std::endl;
