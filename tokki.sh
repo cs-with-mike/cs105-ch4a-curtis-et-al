@@ -17,6 +17,12 @@ cd RELEASE_BUILD
 make
 cd ..
 
+
+echo "BEGIN PRINTING FILE"
+cat $1
+echo "END PRINTING FILE"
+
+
 # Run your Tokki lexer, passing in the first command line argument directly to the lexer.
 # Any output to STDOUT should be directed to a text output file titled "out.txt."
 echo "Running Tokki ..."
