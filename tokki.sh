@@ -26,7 +26,7 @@ echo "END PRINTING FILE---------------------------------------------------------
 # Run your Tokki lexer, passing in the first command line argument directly to the lexer.
 # Any output to STDOUT should be directed to a text output file titled "out.txt."
 echo "BEGIN RUN TOKKI----------------------------------------------------------------------------------"
-./RELEASE_BUILD/tokki $1 > out.txt
+./RELEASE_BUILD/tokki $1
 echo "END RUN TOKKI------------------------------------------------------------------------------------"
 
 echo "BEGIN PRINT RESULTS------------------------------------------------------------------------------"
