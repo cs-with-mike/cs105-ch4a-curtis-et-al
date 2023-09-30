@@ -154,9 +154,9 @@ int main(int argc, char *argv[]) {
         case IDENTIFIER:
             lexeme_out(&char_buffer, IDT, &writer);
             break;
-        default:
-            break;
     }
+    char ending[] = "next token is:         EOF | next lexeme is EOF\n";
+    writer.write(ending, 48);
 
     std::cout << "Parsing complete" << std::endl;
     std::cout << "Closing write file" << std::endl;
