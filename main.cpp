@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
                     state = INTEGER;
                 } else {
                     char_buffer << c;
-                    lexeme_out(&char_buffer, );
+                    lexeme_out(&char_buffer, op_lookup[c], &writer);
                     char_buffer.str("");
                 }
                 break;
