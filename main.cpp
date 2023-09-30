@@ -59,6 +59,18 @@ int main(int argc, char *argv[]) {
         }
         switch (state) {
             case OUTSIDE:
+                if (isblank(c)){
+                } else if (isalpha(c)) {
+                    char_buffer << c;
+                    state = IDENTIFIER;
+                } else if (isdigit(c)) {
+                    char_buffer << c;
+                    state = INTEGER;
+                } else {
+                    char_buffer << c;
+                    lexeme_out(&char_buffer, );
+                    char_buffer.str("");
+                }
                 break;
             case INTEGER:
                 break;
