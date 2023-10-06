@@ -6,6 +6,7 @@
 enum states {OUTSIDE, INTEGER, IDENTIFIER};
 enum ltypes {INT, IDT, ASN, ADD, SUB, MUL, DIV, LPR, RPR};
 
+
 std::ifstream *open_file(int argc, char *argv[]) {
     std::ifstream *reader;
 
@@ -161,5 +162,9 @@ int main(int argc, char *argv[]) {
     std::cout << "Parsing complete" << std::endl;
     std::cout << "Closing write file" << std::endl;
     writer.close();
+}
+
+void expr(int depth) {
+
 }
 
