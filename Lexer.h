@@ -21,7 +21,7 @@ class Lexer {
     public:
         Lexer(char file_name[]);
         Token next_token();
-        Token peak_token();
+        Token peek_token();
         void close();
 
     private:
