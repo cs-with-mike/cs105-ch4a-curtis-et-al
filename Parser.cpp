@@ -19,3 +19,12 @@ void Parser::term(int depth) {
         this->factor(depth +1);
     }
 }
+
+void Parser::out_error(Token token) {
+    this->writer->write("Error - invalid tokki syntax at: ", 33);
+    this->writer->write(token.value.c_str(), token.value.length());
+    this->writer->write("\n", 1);
+    this->writer->close();
+    this->lexer->close();
+    exit(-1);
+}
