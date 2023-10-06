@@ -21,6 +21,7 @@ class Lexer {
     public:
         Lexer(char file_name[]);
         Token next_token();
+        Token peak_token();
 
     private:
         std::ifstream *reader;

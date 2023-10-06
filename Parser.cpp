@@ -9,3 +9,13 @@ Parser::Parser(Lexer *lexer, char *filename) {
     this->writer = new std::ofstream();
     this->writer->open(filename);
 }
+
+void Parser::term(int depth) {
+    Token t;
+    this->factor(depth +1);
+    t = this->lexer->peak_token();
+    while ((t.type == MUL) || (t.type == DIV)){
+        out_token(depth, this->lexer->next_token());
+        this->factor(depth +1);
+    }
+}
