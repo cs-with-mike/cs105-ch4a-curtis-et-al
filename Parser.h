@@ -9,6 +9,7 @@
 #include <fstream> //import this to work with files
 
 enum nonterminals {EXPRESSION, TERM, FACTOR};
+enum front_door {ENT, EXT};
 
 class Parser {
     public:
@@ -21,7 +22,7 @@ class Parser {
         void term(int depth);
         void factor(int depth);
         void out_token(int depth, Token);
-        void out_nonterminal(int depth, nonterminals nt);
+        void out_nonterminal(int depth, nonterminals nt, front_door fd);
         void out_error(Token token);
 };
 

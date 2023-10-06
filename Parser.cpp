@@ -12,12 +12,14 @@ Parser::Parser(Lexer *lexer, char *filename) {
 
 void Parser::term(int depth) {
     Token t;
+    out_nonterminal(depth, TERM, ENT);
     this->factor(depth +1);
     t = this->lexer->peak_token();
     while ((t.type == MUL) || (t.type == DIV)){
         out_token(depth, this->lexer->next_token());
         this->factor(depth +1);
     }
+    out_nonterminal(depth, TERM, EXT);
 }
 
 void Parser::out_error(Token token) {
