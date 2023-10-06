@@ -23,7 +23,7 @@ class Lexer {
         Token next_token();
 
     private:
-        std::ifstream reader;
+        std::ifstream *reader;
 };
 
 
