@@ -29,6 +29,16 @@ class Parser {
         void out_token(int depth, Token token);
         void out_nonterminal(int depth, nonterminals nt, front_door fd);
         void out_error(Token token);
+
+        class ParserLexer final : public Lexer {
+        public:
+            ParserLexer(const std::string &read_file_name, const std::shared_ptr<std::ofstream> &write_file, Parser *outer);
+
+        private:
+            Parser *outer;
+            std::shared_ptr<std::ofstream> writer;
+            void token_hook() override;
+        };
 };
 
 

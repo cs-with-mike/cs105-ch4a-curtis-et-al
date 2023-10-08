@@ -10,22 +10,25 @@
 #include <cctype>
 #include <sstream>
 
-enum ltypes {INT, IDT, ASN, ADD, SUB, MUL, DIV, LPR, RPR};
+enum token_type {T_INT, T_IDENT, T_ASSIGN, T_ADD, T_SUB, T_MUL, T_DIV, T_LPAREN, T_RPAREN, T_NULL};
 
-typedef struct{
+typedef struct {
     std::string value;
-    ltypes type;
+    token_type type;
 } Token;
 
 class Lexer {
-    public:
-        Lexer(char file_name[]);
-        Token next_token();
-        Token peek_token();
-        void close();
+public:
+    explicit Lexer(const std::string &read_file_name);
+    Token next_token();
+    Token peek_token();
+    virtual void token_hook()=0;
 
-    private:
-        std::ifstream *reader;
+protected:
+    Token current_token;
+
+private:
+    std::ifstream reader;
 };
 
 
