@@ -2,22 +2,38 @@
 // Created by Joshua Nielsen on 10/5/23.
 //
 
-#include "Lexer.h"
-
 #include <utility>
 
+#include "Lexer.h"
+
+Lexer::Lexer() {
+    this->t_buffer = std::make_shared<Token>();  // smart ptr init to nullptr, so we need to manually create new Token
+    this->t_buffer->type = T_NULL;  // Token->type inits to T_INT, so we need to manually set to T_NULL
+}
+
 Lexer::Lexer(const std::string &read_file_name) {
-    this->reader = std::ifstream(read_file_name);
-    this->t_buffer = std::make_shared<Token>();
-    this->t_buffer->type = T_NULL;
+    this->reader.open(read_file_name);  // reader init to ifstream unopened, so we can just open it
+    this->t_buffer = std::make_shared<Token>();  // smart ptr init to nullptr, so we manually create new Token
+    this->t_buffer->type = T_NULL;  // Token->type inits to T_INT, so we need to manually set to T_NULL
+    this->is_open = true;  // is_open I think is just uninitialized data, so we initialize it? TODO: check this one
+}
+
+int Lexer::open(const std::string &read_file_name) {
+    if (this->is_open) {
+        return 1;  // Lexer has already opened a file
+    } else {
+        this->reader.open(read_file_name);  // It is impossible for Lexer to have uninit reader, so we safely open
+        this->is_open = true;  // Set open status to true so it cannot be opened again
+        return 0;
+    }
 }
 
 std::shared_ptr<Token> Lexer::next_token() {
-    if (this->t_buffer->type != T_NULL) {
-        auto return_val = std::shared_ptr<Token>(this->t_buffer);
+    if (this->t_buffer->type != T_NULL) {  // If we've already peeked and there is a token ready to go
+        auto return_val = std::move(this->t_buffer); // We can move b/c we dispose of t_buffer soon
         this->t_buffer = std::make_shared<Token>();
         this->t_buffer->type = T_NULL;
-        return return_val;
+        return return_val;  // Have to construct new shared_ptr when returning
     }
 
     std::stringstream buffer("");
@@ -78,13 +94,13 @@ std::shared_ptr<Token> Lexer::next_token() {
     }
     this->t_buffer->value = buffer.str();
     this->token_hook();
-    return std::shared_ptr<Token>(this->t_buffer);
+    return this->t_buffer;
 }
 
 std::shared_ptr<Token> Lexer::peek_token() {
     if (this->t_buffer->type == T_NULL) {
-        return std::shared_ptr<Token>(this->next_token());
+        return this->next_token();
     } else {
-        return std::shared_ptr<Token>(this->t_buffer);
+        return this->t_buffer;
     }
 }

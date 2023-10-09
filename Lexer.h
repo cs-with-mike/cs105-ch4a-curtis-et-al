@@ -21,16 +21,18 @@ typedef struct token Token;
 
 class Lexer {
 public:
+    Lexer();
     explicit Lexer(const std::string &read_file_name);
+    virtual ~Lexer()=default;
     std::shared_ptr<Token> next_token();
     std::shared_ptr<Token> peek_token();
     virtual void token_hook()=0;
+    int open(const std::string &read_file_name);
 
 protected:
     std::shared_ptr<Token> t_buffer;
-
-private:
     std::ifstream reader;
+    bool is_open=false;
 };
 
 #endif //CS_105_CH4A_CURTIS_ET_AL_LEXER_H

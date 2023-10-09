@@ -5,7 +5,7 @@
 #include "PureLexer.h"
 
 PureLexer::PureLexer(const std::string &read_file_name, const std::string &write_file_name) : Lexer(read_file_name) {
-    this->writer = std::ofstream(write_file_name);
+    this->writer.open(write_file_name);
 }
 
 void PureLexer::token_hook() {

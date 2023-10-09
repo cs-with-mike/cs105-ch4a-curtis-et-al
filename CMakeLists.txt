@@ -7,9 +7,8 @@ add_executable(
         main.cpp
         Lexer.cpp
         Lexer.h
-#        Parser.cpp
-#        Parser.h
+        Parser.cpp
+        Parser.h
         PureLexer.cpp
         PureLexer.h
         )
-

@@ -5,41 +5,50 @@
 #ifndef CS_105_CH4A_CURTIS_ET_AL_PARSER_H
 #define CS_105_CH4A_CURTIS_ET_AL_PARSER_H
 
-#include "Lexer.h" //import the header file which comes with all the variables we'd need from the lexer.
 #include <fstream> //import this to work with files
 #include <sstream>
 #include <string>
 
-enum nonterminals {EXPRESSION, TERM, FACTOR};
-enum front_door {ENT, EXT};
-
-std::string mapping[] = {"INT_LIT", "IDENT", "ASSIGN_OP", "ADD_OP", "SUB_OP", "MULT_OP", "DIV_OP", "LEFT_PAREN", "RIGHT_PAREN"};
-std::string nonterminalmapping[] = {"expr", "term", "factor"};
+#include "Lexer.h" //import the header file which comes with all the variables we'd need from the lexer.
 
 class Parser {
     public:
-        Parser(Lexer *lexer, char filename[]);
-        void expression(int depth);
+        Parser(const std::string& read_file_name, const std::string& write_file_name);
+        void parse();
 
     private:
-        Lexer *lexer;
-        std::ofstream *writer;
-        void term(int depth);
-        void factor (int depth);
-        void out_token(int depth, Token token);
-        void out_nonterminal(int depth, nonterminals nt, front_door fd);
-        void out_error(Token token);
+        enum nonterminals {EXPRESSION, TERM, FACTOR};
+        enum front_door {ENT, EXT};
 
-        class ParserLexer final : public Lexer {
+        class ParserLexer : public Lexer {
         public:
-            ParserLexer(const std::string &read_file_name, const std::shared_ptr<std::ofstream> &write_file, Parser *outer);
+            ParserLexer(); // TODO: complete
+            ParserLexer(const std::string &read_file_name, std::ofstream *write_file, Parser *outer);
+            ~ParserLexer() override=default;
+            ParserLexer &operator =(Parser::ParserLexer &&b) noexcept;
 
         private:
-            Parser *outer;
-            std::shared_ptr<std::ofstream> writer;
             void token_hook() override;
+
+            Parser *outer;
+            std::ofstream *writer;
         };
+
+        ParserLexer lexer;
+        std::ofstream writer;
+        int depth=0;
+
+        void expression();
+        void term();
+        void factor ();
+        void out_nonterminal(nonterminals nt, front_door fd);
+        void out_token(const std::shared_ptr<Token> &token);
+        void out_error(const std::shared_ptr<Token> &token);
+
+        static std::string mapping[9];
+        static std::string nonterminalmapping[3];
 };
+
 
 
 #endif //CS_105_CH4A_CURTIS_ET_AL_PARSER_H
