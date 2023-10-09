@@ -18,16 +18,6 @@ Lexer::Lexer(const std::string &read_file_name) {
     this->is_open = true;  // is_open I think is just uninitialized data, so we initialize it? TODO: check this one
 }
 
-int Lexer::open(const std::string &read_file_name) {
-    if (this->is_open) {
-        return 1;  // Lexer has already opened a file
-    } else {
-        this->reader.open(read_file_name);  // It is impossible for Lexer to have uninit reader, so we safely open
-        this->is_open = true;  // Set open status to true so it cannot be opened again
-        return 0;
-    }
-}
-
 std::shared_ptr<Token> Lexer::next_token() {
     if (this->t_buffer->type != T_NULL) {  // If we've already peeked and there is a token ready to go
         auto return_val = std::move(this->t_buffer); // We can move b/c we dispose of t_buffer soon

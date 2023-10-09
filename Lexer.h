@@ -27,7 +27,6 @@ public:
     std::shared_ptr<Token> next_token();
     std::shared_ptr<Token> peek_token();
     virtual void token_hook()=0;
-    int open(const std::string &read_file_name);
 
 protected:
     std::shared_ptr<Token> t_buffer;
