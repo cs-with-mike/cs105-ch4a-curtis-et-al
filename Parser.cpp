@@ -70,7 +70,7 @@ void Parser::out_token(const std::shared_ptr<Token> &token) {
     writer.write(mapping[token->type].c_str(), mapping[token->type].length());
     writer.write(" [ ", 3);
     writer.write(token->value.c_str(), token->value.length());
-    writer.write("]\n", 2);
+    writer.write(" ]\n", 3);
 }
 
 void Parser::out_nonterminal(nonterminals nt, front_door fd) {
