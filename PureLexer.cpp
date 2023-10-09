@@ -9,7 +9,7 @@ PureLexer::PureLexer(const std::string &read_file_name, const std::string &write
 }
 
 void PureLexer::token_hook() {
-    if (this->current_token.type == T_NULL) {
+    if (this->t_buffer->type == T_NULL) {
         return;
     }
     static const char *types[] = {
@@ -27,8 +27,8 @@ void PureLexer::token_hook() {
     static const char *lexeme_dec = " | Next lexeme is ";
 
     this->writer.write(token_dec, 14);
-    this->writer.write(types[this->current_token.type], 12);
+    this->writer.write(types[this->t_buffer->type], 12);
     this->writer.write(lexeme_dec, 18);
-    this->writer.write(this->current_token.value.c_str(), (long) this->current_token.value.length());
+    this->writer.write(this->t_buffer->value.c_str(), (long) this->t_buffer->value.length());
     this->writer.write("\n", 1);
 }

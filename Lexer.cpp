@@ -8,9 +8,18 @@
 
 Lexer::Lexer(const std::string &read_file_name) {
     this->reader = std::ifstream(read_file_name);
+    this->t_buffer = std::make_shared<Token>();
+    this->t_buffer->type = T_NULL;
 }
 
-Token Lexer::next_token() {
+std::shared_ptr<Token> Lexer::next_token() {
+    if (this->t_buffer->type != T_NULL) {
+        auto return_val = std::shared_ptr<Token>(this->t_buffer);
+        this->t_buffer = std::make_shared<Token>();
+        this->t_buffer->type = T_NULL;
+        return return_val;
+    }
+
     std::stringstream buffer("");
     char c = EOF;
 
@@ -19,28 +28,28 @@ Token Lexer::next_token() {
 
     switch (c) {
         case EOF:  // at end of file
-            this->current_token.type = T_NULL;
+            this->t_buffer->type = T_NULL;
             break;
         case '+':
-            this->current_token.type = T_ADD;
+            this->t_buffer->type = T_ADD;
             break;
         case '-':
-            this->current_token.type = T_SUB;
+            this->t_buffer->type = T_SUB;
             break;
         case '*':
-            this->current_token.type = T_MUL;
+            this->t_buffer->type = T_MUL;
             break;
         case '/':
-            this->current_token.type = T_DIV;
+            this->t_buffer->type = T_DIV;
             break;
         case '(':
-            this->current_token.type = T_LPAREN;
+            this->t_buffer->type = T_LPAREN;
             break;
         case ')':
-            this->current_token.type = T_RPAREN;
+            this->t_buffer->type = T_RPAREN;
             break;
         case '=':
-            this->current_token.type = T_ASSIGN;
+            this->t_buffer->type = T_ASSIGN;
             break;
         default:
             if (isalnum(c)) {
@@ -52,7 +61,7 @@ Token Lexer::next_token() {
                         break;
                     }
                 }
-                this->current_token.type = T_IDENT;
+                this->t_buffer->type = T_IDENT;
             } else if (isnumber(c)) {
                 while(this->reader.get(c)) {
                     if (isnumber(c)) {
@@ -62,16 +71,20 @@ Token Lexer::next_token() {
                         break;
                     }
                 }
-                this->current_token.type = T_INT;
+                this->t_buffer->type = T_INT;
             } else {
-                this->current_token.type = T_NULL;
+                this->t_buffer->type = T_NULL;
             }
     }
-    this->current_token.value = std::move(buffer.str());
+    this->t_buffer->value = buffer.str();
     this->token_hook();
-    return this->current_token;
+    return std::shared_ptr<Token>(this->t_buffer);
 }
 
-Token Lexer::peek_token() {
-    return this->current_token;
+std::shared_ptr<Token> Lexer::peek_token() {
+    if (this->t_buffer->type == T_NULL) {
+        return std::shared_ptr<Token>(this->next_token());
+    } else {
+        return std::shared_ptr<Token>(this->t_buffer);
+    }
 }

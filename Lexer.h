@@ -12,24 +12,25 @@
 
 enum token_type {T_INT, T_IDENT, T_ASSIGN, T_ADD, T_SUB, T_MUL, T_DIV, T_LPAREN, T_RPAREN, T_NULL};
 
-typedef struct {
+struct token {
     std::string value;
     token_type type;
-} Token;
+};
+
+typedef struct token Token;
 
 class Lexer {
 public:
     explicit Lexer(const std::string &read_file_name);
-    Token next_token();
-    Token peek_token();
+    std::shared_ptr<Token> next_token();
+    std::shared_ptr<Token> peek_token();
     virtual void token_hook()=0;
 
 protected:
-    Token current_token;
+    std::shared_ptr<Token> t_buffer;
 
 private:
     std::ifstream reader;
 };
-
 
 #endif //CS_105_CH4A_CURTIS_ET_AL_LEXER_H
