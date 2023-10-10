@@ -18,7 +18,7 @@ namespace Lexing {
 
     private:
         std::ofstream writer;
-        void token_hook() override;
+        void gen_t_hook() override;
     };
 }
 

@@ -29,7 +29,7 @@ namespace Parsing {
             ParserLexer &operator =(Parser::ParserLexer &&b) noexcept;
 
         private:
-            void token_hook() override;
+            void gen_t_hook() override;
 
             Parser *outer;
             std::ofstream *writer;

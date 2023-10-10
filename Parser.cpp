@@ -5,7 +5,7 @@
 #include "Parser.h"
 
 namespace Parsing {
-    std::string Parser::mapping[] = {"INT_LIT", "IDENT", "ASSIGN_OP", "ADD_OP", "SUB_OP", "MULT_OP", "DIV_OP", "LEFT_PAREN", "RIGHT_PAREN"};
+    std::string Parser::mapping[] = {"INT_LIT", "IDENT", "", "ADD_OP", "SUB_OP", "MULT_OP", "DIV_OP", "LEFT_PAREN", "RIGHT_PAREN"};
     std::string Parser::nonterminalmapping[] = {"expr", "term", "factor"};
 
     Parser::Parser(const std::string& read_fname, const std::string& write_fname) {
@@ -95,7 +95,7 @@ namespace Parsing {
         this->outer = outer;
     }
 
-    void Parser::ParserLexer::token_hook() {
+    void Parser::ParserLexer::gen_t_hook() {
         this->writer->write("OHHH YEAH BABYYYYY\n", 19);
     }
 

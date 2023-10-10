@@ -25,14 +25,18 @@ namespace Lexing {
         Lexer();
         explicit Lexer(const std::string &read_fname);
         virtual ~Lexer()=default;
-        std::shared_ptr<Token> next_token();
-        std::shared_ptr<Token> peek_token();
-        virtual void token_hook()=0;
+        virtual std::shared_ptr<Token> next_token();
+        virtual std::shared_ptr<Token> peek_token();
+        virtual void gen_t_hook();
+        virtual void next_t_hook();
+        virtual void peek_t_hook();
 
     protected:
+        void fill_buffer();
+
         std::shared_ptr<Token> t_buffer;
         std::ifstream reader;
-        bool is_open=false;
+        bool buffer_full=false;
     };
 }
 

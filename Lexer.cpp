@@ -16,19 +16,29 @@ namespace Lexing {
         this->reader.open(read_fname);  // reader init to ifstream unopened, so we can just open it
         this->t_buffer = std::make_shared<Token>();  // smart ptr init to nullptr, so we manually create new Token
         this->t_buffer->type = T_NULL;  // Token->type inits to T_INT, so we need to manually set to T_NULL
-        this->is_open = true;  // is_open I think is just uninitialized data, so we initialize it? TODO: check this one
     }
 
     std::shared_ptr<Token> Lexer::next_token() {
-        if (this->t_buffer->type != T_NULL) {  // If we've already peeked and there is a token ready to go
-            auto return_val = std::move(this->t_buffer); // We can move b/c we dispose of t_buffer soon
-            this->t_buffer = std::make_shared<Token>();
-            this->t_buffer->type = T_NULL;
-            return return_val;  // Have to construct new shared_ptr when returning
+        if (!this->buffer_full) {
+            this->fill_buffer();
         }
+        this->buffer_full = false;
+        this->next_t_hook();
+        return std::move(this->t_buffer);  // Can move because we no longer need it
+    }
 
+    std::shared_ptr<Token> Lexer::peek_token() {
+        if (!this->buffer_full) {
+            this->fill_buffer();
+        }
+        this->peek_t_hook();
+        return this->t_buffer;
+    }
+
+    void Lexer::fill_buffer() {
         std::stringstream buffer("");
         char c = EOF;
+        this->t_buffer = std::make_shared<Token>();  // generate new Token
 
         this->reader >> c;  // get first non whitespace char
         buffer << c;  // and put it in the string buffer
@@ -59,9 +69,9 @@ namespace Lexing {
                 this->t_buffer->type = T_ASSIGN;
                 break;
             default:
-                if (isalnum(c)) {
+                if (isalpha(c)) {
                     while(this->reader.get(c)) {
-                        if (isalpha(c)) {
+                        if (isalnum(c)) {
                             buffer << c;
                         } else {
                             this->reader.unget();
@@ -84,15 +94,13 @@ namespace Lexing {
                 }
         }
         this->t_buffer->value = buffer.str();
-        this->token_hook();
-        return this->t_buffer;
+        this->buffer_full = true;
+        this->gen_t_hook();
     }
 
-    std::shared_ptr<Token> Lexer::peek_token() {
-        if (this->t_buffer->type == T_NULL) {
-            return this->next_token();
-        } else {
-            return this->t_buffer;
-        }
-    }
+    void Lexer::gen_t_hook() {}
+
+    void Lexer::next_t_hook() {}
+
+    void Lexer::peek_t_hook() {}
 }
