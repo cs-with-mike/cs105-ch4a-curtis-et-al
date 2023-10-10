@@ -11,19 +11,20 @@
 
 #include "Lexer.h" //import the header file which comes with all the variables we'd need from the lexer.
 
-class Parser {
+namespace Parsing {
+    class Parser {
     public:
-        Parser(const std::string& read_file_name, const std::string& write_file_name);
+        Parser(const std::string& read_fname, const std::string& write_fname);
         void parse();
 
     private:
         enum nonterminals {EXPRESSION, TERM, FACTOR};
         enum front_door {ENT, EXT};
 
-        class ParserLexer : public Lexer {
+        class ParserLexer : public Lexing::Lexer {
         public:
             ParserLexer(); // TODO: complete
-            ParserLexer(const std::string &read_file_name, std::ofstream *write_file, Parser *outer);
+            ParserLexer(const std::string &read_fname, std::ofstream *write_file, Parser *outer);
             ~ParserLexer() override=default;
             ParserLexer &operator =(Parser::ParserLexer &&b) noexcept;
 
@@ -42,13 +43,12 @@ class Parser {
         void term();
         void factor ();
         void out_nonterminal(nonterminals nt, front_door fd);
-        void out_token(const std::shared_ptr<Token> &token);
-        void out_error(const std::shared_ptr<Token> &token);
+        void out_token(const std::shared_ptr<Lexing::Token> &token);
+        void out_error(const std::shared_ptr<Lexing::Token> &token);
 
         static std::string mapping[9];
         static std::string nonterminalmapping[3];
-};
-
-
+    };
+}
 
 #endif //CS_105_CH4A_CURTIS_ET_AL_PARSER_H

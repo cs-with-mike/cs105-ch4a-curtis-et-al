@@ -4,110 +4,112 @@
 
 #include "Parser.h"
 
-std::string Parser::mapping[] = {"INT_LIT", "IDENT", "ASSIGN_OP", "ADD_OP", "SUB_OP", "MULT_OP", "DIV_OP", "LEFT_PAREN", "RIGHT_PAREN"};
-std::string Parser::nonterminalmapping[] = {"expr", "term", "factor"};
+namespace Parsing {
+    std::string Parser::mapping[] = {"INT_LIT", "IDENT", "ASSIGN_OP", "ADD_OP", "SUB_OP", "MULT_OP", "DIV_OP", "LEFT_PAREN", "RIGHT_PAREN"};
+    std::string Parser::nonterminalmapping[] = {"expr", "term", "factor"};
 
-Parser::Parser(const std::string& read_file_name, const std::string& write_file_name) {
-    this->writer.open(write_file_name);
-    this->lexer = Parser::ParserLexer(read_file_name, &this->writer, this);
-}
-
-void Parser::expression() {
-    out_nonterminal(EXPRESSION, ENT);
-    this->term(); // given that an expression is going to start with a term, we can dive right into the term.
-    while(this->lexer.peek_token()->type == T_ADD || this->lexer.peek_token()->type == T_SUB) {
-        out_token(this->lexer.next_token());
-        this->term(); // go inside the next term
+    Parser::Parser(const std::string& read_fname, const std::string& write_fname) {
+        this->writer.open(write_fname);
+        this->lexer = Parser::ParserLexer(read_fname, &this->writer, this);
     }
 
-    out_nonterminal(EXPRESSION, EXT);
-}
+    void Parser::expression() {
+        out_nonterminal(EXPRESSION, ENT);
+        this->term(); // given that an expression is going to start with a term, we can dive right into the term.
+        while(this->lexer.peek_token()->type == Lexing::T_ADD || this->lexer.peek_token()->type == Lexing::T_SUB) {
+            out_token(this->lexer.next_token());
+            this->term(); // go inside the next term
+        }
 
-void Parser::term() {
-    out_nonterminal(TERM, ENT);
-    this->factor();
-    while ((this->lexer.peek_token()->type == T_MUL) || (this->lexer.peek_token()->type == T_DIV)){
-        out_token(this->lexer.next_token());
+        out_nonterminal(EXPRESSION, EXT);
+    }
+
+    void Parser::term() {
+        out_nonterminal(TERM, ENT);
         this->factor();
+        while ((this->lexer.peek_token()->type == Lexing::T_MUL) || (this->lexer.peek_token()->type == Lexing::T_DIV)) {
+            out_token(this->lexer.next_token());
+            this->factor();
+        }
+        out_nonterminal(TERM, EXT);
     }
-    out_nonterminal(TERM, EXT);
-}
 
-void Parser::factor() {
-    out_nonterminal(FACTOR, ENT);
-    switch (this->lexer.peek_token()->type) {
-        case T_IDENT:
-        case T_INT:
-            out_token(this->lexer.next_token());
-            break;
-        case T_LPAREN:
-            out_token(this->lexer.next_token());
-            this->expression();
-            if (this->lexer.peek_token()->type == T_RPAREN) {
+    void Parser::factor() {
+        out_nonterminal(FACTOR, ENT);
+        switch (this->lexer.peek_token()->type) {
+            case Lexing::T_IDENT:
+            case Lexing::T_INT:
                 out_token(this->lexer.next_token());
-            } else {
+                break;
+            case Lexing::T_LPAREN:
+                out_token(this->lexer.next_token());
+                this->expression();
+                if (this->lexer.peek_token()->type == Lexing::T_RPAREN) {
+                    out_token(this->lexer.next_token());
+                } else {
+                    this->out_error(this->lexer.peek_token());
+                }
+                break;
+            default:
                 this->out_error(this->lexer.peek_token());
-            }
-            break;
-        default:
-            this->out_error(this->lexer.peek_token());
+        }
+        out_nonterminal(FACTOR, EXT);
     }
-    out_nonterminal(FACTOR, EXT);
-}
 
-void Parser::out_error(const std::shared_ptr<Token> &token) {
-    this->writer.write("Error - invalid tokki syntax at: ", 33);
-    this->writer.write(token->value.c_str(), token->value.length());
-    this->writer.write("\n", 1);
-    this->writer.close();
-    delete &this->lexer;
-    exit(-1);  // TODO: I don't know, but not this
-}
+    void Parser::out_error(const std::shared_ptr<Lexing::Token> &token) {
+        this->writer.write("Error - invalid tokki syntax at: ", 33);
+        this->writer.write(token->value.c_str(), token->value.length());
+        this->writer.write("\n", 1);
+        this->writer.close();
+        delete &this->lexer;
+        exit(-1);  // TODO: I don't know, but not this
+    }
 
-void Parser::out_token(const std::shared_ptr<Token> &token) {
-    this->writer.write(std::string(this->depth, '=').c_str(), this->depth);
-    writer.write(" ", 1);
-    writer.write(mapping[token->type].c_str(), mapping[token->type].length());
-    writer.write(" [ ", 3);
-    writer.write(token->value.c_str(), token->value.length());
-    writer.write(" ]\n", 3);
-}
+    void Parser::out_token(const std::shared_ptr<Lexing::Token> &token) {
+        this->writer.write(std::string(this->depth, '=').c_str(), this->depth);
+        writer.write(" ", 1);
+        writer.write(mapping[token->type].c_str(), mapping[token->type].length());
+        writer.write(" [ ", 3);
+        writer.write(token->value.c_str(), token->value.length());
+        writer.write(" ]\n", 3);
+    }
 
-void Parser::out_nonterminal(nonterminals nt, front_door fd) {
-    if (fd == ENT) {this->depth++;}
+    void Parser::out_nonterminal(nonterminals nt, front_door fd) {
+        if (fd == ENT) {this->depth++;}
 
-    char indent = (fd == ENT) ? '>' : '<';
-    writer.write(std::string(this->depth, indent).c_str(), this->depth);
-    writer.write(" ", 1);
-    writer.write(nonterminalmapping[nt].c_str(), nonterminalmapping[nt].length());
-    writer.write("\n", 1);
+        char indent = (fd == ENT) ? '>' : '<';
+        writer.write(std::string(this->depth, indent).c_str(), this->depth);
+        writer.write(" ", 1);
+        writer.write(nonterminalmapping[nt].c_str(), nonterminalmapping[nt].length());
+        writer.write("\n", 1);
 
-    if (fd == EXT) {this->depth--;}
-}
+        if (fd == EXT) {this->depth--;}
+    }
 
-void Parser::parse() {
-    this->expression();
-}
+    void Parser::parse() {
+        this->expression();
+    }
 
-Parser::ParserLexer::ParserLexer(const std::string &read_file_name, std::ofstream *write_file, Parser *outer) : Lexer(read_file_name) {
-    this->writer = write_file;
-    this->outer = outer;
-}
+    Parser::ParserLexer::ParserLexer(const std::string &read_fname, std::ofstream *write_file, Parser *outer) : Lexer(read_fname) {
+        this->writer = write_file;
+        this->outer = outer;
+    }
 
-void Parser::ParserLexer::token_hook() {
-    this->writer->write("OHHH YEAH BABYYYYY\n", 19);
-}
+    void Parser::ParserLexer::token_hook() {
+        this->writer->write("OHHH YEAH BABYYYYY\n", 19);
+    }
 
-Parser::ParserLexer &Parser::ParserLexer::operator=(Parser::ParserLexer &&b) noexcept {
-    this->t_buffer = std::move(b.t_buffer);
-    this->reader = std::move(b.reader);
-    this->outer = b.outer;
-    this->writer = b.writer;
+    Parser::ParserLexer &Parser::ParserLexer::operator=(Parser::ParserLexer &&b) noexcept {
+        this->t_buffer = std::move(b.t_buffer);
+        this->reader = std::move(b.reader);
+        this->outer = b.outer;
+        this->writer = b.writer;
 
-    return *this;
-}
+        return *this;
+    }
 
-Parser::ParserLexer::ParserLexer() : Lexer() {
-    this->outer = nullptr;
-    this->writer = nullptr;
+    Parser::ParserLexer::ParserLexer() : Lexer() {
+        this->outer = nullptr;
+        this->writer = nullptr;
+    }
 }

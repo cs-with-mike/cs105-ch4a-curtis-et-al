@@ -10,14 +10,16 @@
 
 #include "Lexer.h"
 
-class PureLexer final: public Lexer {
-public:
-    PureLexer(const std::string &read_file_name, const std::string &write_file_name);
-    ~PureLexer() override=default;
+namespace Lexing {
+    class PureLexer final: public Lexer {
+    public:
+        PureLexer(const std::string &read_file_name, const std::string &write_file_name);
+        ~PureLexer() override=default;
 
-private:
-    std::ofstream writer;
-    void token_hook() override;
-};
+    private:
+        std::ofstream writer;
+        void token_hook() override;
+    };
+}
 
 #endif //CS_105_CH4A_CURTIS_ET_AL_PURELEXER_H
