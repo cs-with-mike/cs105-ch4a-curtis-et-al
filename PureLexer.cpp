@@ -11,9 +11,9 @@ namespace Lexing {
 
     void PureLexer::gen_t_hook() {
         if (this->t_buffer->type == T_NULL) {
-            this->writer.write("Next token is:         EOF | Next lexeme is ", 44);
-            this->writer.write(this->t_buffer->value.c_str(), (long) this->t_buffer->value.length());
-            this->writer.write("\n", 1);
+            this->writer.write("Next token is:         EOF | Next lexeme is EOF\n", 48);
+            //this->writer.write(this->t_buffer->value.c_str(), (long) this->t_buffer->value.length());
+            //this->writer.write("\n", 1);
             return;
         }
         static const char *types[] = {

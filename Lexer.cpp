@@ -3,6 +3,7 @@
 //
 
 #include <utility>
+#include <cctype>
 
 #include "Lexer.h"
 
@@ -69,9 +70,9 @@ namespace Lexing {
                 this->t_buffer->type = T_ASSIGN;
                 break;
             default:
-                if (isalpha(c)) {
+                if (std::isalpha(c)) {
                     while(this->reader.get(c)) {
-                        if (isalnum(c)) {
+                        if (std::isalnum(c)) {
                             buffer << c;
                         } else {
                             this->reader.unget();
@@ -79,9 +80,9 @@ namespace Lexing {
                         }
                     }
                     this->t_buffer->type = T_IDENT;
-                } else if (isnumber(c)) {
+                } else if (std::isdigit(c)) {
                     while(this->reader.get(c)) {
-                        if (isnumber(c)) {
+                        if (std::isdigit(c)) {
                             buffer << c;
                         } else {
                             this->reader.unget();

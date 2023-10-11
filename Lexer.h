@@ -9,6 +9,7 @@
 #include <fstream>
 #include <cctype>
 #include <sstream>
+#include <memory>
 
 namespace Lexing {
     enum token_type {T_INT, T_IDENT, T_ASSIGN, T_ADD, T_SUB, T_MUL, T_DIV, T_LPAREN, T_RPAREN, T_NULL};

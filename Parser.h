@@ -8,6 +8,7 @@
 #include <fstream> //import this to work with files
 #include <sstream>
 #include <string>
+#include <memory>
 
 #include "Lexer.h" //import the header file which comes with all the variables we'd need from the lexer.
 
