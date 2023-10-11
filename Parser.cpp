@@ -89,6 +89,11 @@ namespace Parsing {
     }
 
     void Parser::ParserLexer::gen_t_hook() {
+        if (this->t_buffer->type == Lexing::T_NULL) {
+            this->writer->write(std::string(this->outer->depth, '=').c_str(), this->outer->depth);
+            this->writer->write(" EOF [ EOF ]\n", 13);
+            return;
+        }
         this->writer->write(std::string(this->outer->depth, '=').c_str(), this->outer->depth);
         this->writer->write(" ", 1);
         writer->write(Parser::mapping[this->t_buffer->type].c_str(), Parser::mapping[this->t_buffer->type].length());
