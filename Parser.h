@@ -45,7 +45,6 @@ namespace Parsing {
         void term();
         void factor ();
         void out_nonterminal(nonterminals nt, front_door fd);
-        void out_token(const std::shared_ptr<Lexing::Token> &token);
         void out_error(const std::shared_ptr<Lexing::Token> &token);
 
         static std::string mapping[9];

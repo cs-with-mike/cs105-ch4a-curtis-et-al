@@ -18,7 +18,7 @@ namespace Parsing {
         out_nonterminal(EXPRESSION, ENT);
         this->term(); // given that an expression is going to start with a term, we can dive right into the term.
         while(this->lexer.peek_token()->type == Lexing::T_ADD || this->lexer.peek_token()->type == Lexing::T_SUB) {
-            out_token(this->lexer.next_token());
+            this->lexer.next_token();
             this->term(); // go inside the next term
         }
 
@@ -29,7 +29,7 @@ namespace Parsing {
         out_nonterminal(TERM, ENT);
         this->factor();
         while ((this->lexer.peek_token()->type == Lexing::T_MUL) || (this->lexer.peek_token()->type == Lexing::T_DIV)) {
-            out_token(this->lexer.next_token());
+            this->lexer.next_token();
             this->factor();
         }
         out_nonterminal(TERM, EXT);
@@ -40,13 +40,12 @@ namespace Parsing {
         switch (this->lexer.peek_token()->type) {
             case Lexing::T_IDENT:
             case Lexing::T_INT:
-                out_token(this->lexer.next_token());
+                this->lexer.next_token();
                 break;
             case Lexing::T_LPAREN:
-                out_token(this->lexer.next_token());
+                this->lexer.next_token();
                 this->expression();
                 if (this->lexer.peek_token()->type == Lexing::T_RPAREN) {
-                    out_token(this->lexer.next_token());
                 } else {
                     this->out_error(this->lexer.peek_token());
                 }
@@ -64,15 +63,6 @@ namespace Parsing {
         this->writer.close();
         delete &this->lexer;
         exit(-1);  // TODO: I don't know, but not this
-    }
-
-    void Parser::out_token(const std::shared_ptr<Lexing::Token> &token) {
-        this->writer.write(std::string(this->depth, '=').c_str(), this->depth);
-        writer.write(" ", 1);
-        writer.write(mapping[token->type].c_str(), mapping[token->type].length());
-        writer.write(" [ ", 3);
-        writer.write(token->value.c_str(), token->value.length());
-        writer.write(" ]\n", 3);
     }
 
     void Parser::out_nonterminal(nonterminals nt, front_door fd) {
@@ -98,7 +88,12 @@ namespace Parsing {
     }
 
     void Parser::ParserLexer::gen_t_hook() {
-        this->writer->write("OHHH YEAH BABYYYYY\n", 19);
+        this->writer->write(std::string(this->outer->depth, '=').c_str(), this->outer->depth);
+        this->writer->write(" ", 1);
+        writer->write(Parser::mapping[this->t_buffer->type].c_str(), Parser::mapping[this->t_buffer->type].length());
+        this->writer->write(" [ ", 3);
+        writer->write(this->t_buffer->value.c_str(), this->t_buffer->value.length());
+        this->writer->write(" ]\n", 3);
     }
 
     Parser::ParserLexer &Parser::ParserLexer::operator=(Parser::ParserLexer &&b) noexcept {
