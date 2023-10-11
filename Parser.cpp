@@ -60,10 +60,11 @@ namespace Parsing {
     void Parser::out_error(const std::shared_ptr<Lexing::Token> &token) {
         this->writer.write("Error - invalid tokki syntax at: ", 33);
         this->writer.write(&this->previous_char, 1);
-        this->writer.write("\n", 1);
+        if(this->previous_char != EOF) {
+            this->writer.write("\n", 1);
+        }
         this->writer.close();
-        delete &this->lexer;
-        exit(-1);  // TODO: I don't know, but not this
+        exit(1);  // TODO: I don't know, but not this
     }
 
     void Parser::out_nonterminal(nonterminals nt, front_door fd) {
