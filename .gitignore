@@ -1,0 +1,9 @@
+cmake-build-debug
+.DS_Store
+RELEASE_BUILD
+DEBUG_BUILD
+sample.tk
+out.parser.sample.txt
+out.lexer.sample.txt
+curtis.parser.sample.txt
+curtis.lexer.sample.txt
