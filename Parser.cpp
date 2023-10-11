@@ -46,6 +46,7 @@ namespace Parsing {
                 this->lexer.next_token();
                 this->expression();
                 if (this->lexer.peek_token()->type == Lexing::T_RPAREN) {
+                    this->lexer.next_token();
                 } else {
                     this->out_error(this->lexer.peek_token());
                 }
