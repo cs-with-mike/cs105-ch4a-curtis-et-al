@@ -13,7 +13,7 @@
 namespace Lexing {
     class PureLexer final: public Lexer {
     public:
-        PureLexer(const std::string &read_file_name, const std::string &write_file_name);
+        PureLexer(const std::string &read_fname, const std::string &write_fname);
         ~PureLexer() override=default;
 
     private:

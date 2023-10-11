@@ -3,7 +3,7 @@ project(cs-105-ch4a-curtis-et-al)
 
 set(CMAKE_CXX_STANDARD 17)
 add_executable(
-        tokki
+        tokkis
         main.cpp
         Lexer.cpp
         Lexer.h

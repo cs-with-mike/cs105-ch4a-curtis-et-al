@@ -5,8 +5,8 @@
 #include "PureLexer.h"
 
 namespace Lexing {
-    PureLexer::PureLexer(const std::string &read_file_name, const std::string &write_file_name) : Lexer(read_file_name) {
-        this->writer.open(write_file_name);
+    PureLexer::PureLexer(const std::string &read_fname, const std::string &write_fname) : Lexer(read_fname) {
+        this->writer.open(write_fname);
     }
 
     void PureLexer::gen_t_hook() {
