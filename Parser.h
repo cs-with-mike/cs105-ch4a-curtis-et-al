@@ -50,6 +50,7 @@ namespace Parsing {
 
         static std::string mapping[9];
         static std::string nonterminalmapping[3];
+        char previous_char = '\0';
     };
 }
 

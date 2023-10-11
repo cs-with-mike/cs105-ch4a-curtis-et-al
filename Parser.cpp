@@ -59,7 +59,7 @@ namespace Parsing {
 
     void Parser::out_error(const std::shared_ptr<Lexing::Token> &token) {
         this->writer.write("Error - invalid tokki syntax at: ", 33);
-        this->writer.write(token->value.c_str(), token->value.length());
+        this->writer.write(&this->previous_char, 1);
         this->writer.write("\n", 1);
         this->writer.close();
         delete &this->lexer;
@@ -117,6 +117,7 @@ namespace Parsing {
     }
 
     std::shared_ptr<Lexing::Token> Parser::ParserLexer::next_token() {
+        this->outer->previous_char = this->t_buffer->value[this->t_buffer->value.length() - 1];
         auto return_val = std::move(this->t_buffer);
         this->fill_buffer();
         return return_val;
