@@ -23,9 +23,11 @@ namespace Parsing {
 
         class ParserLexer : public Lexing::Lexer {
         public:
-            ParserLexer(); // TODO: complete
+            ParserLexer();
             ParserLexer(const std::string &read_fname, std::ofstream *write_file, Parser *outer);
             ~ParserLexer() override=default;
+            std::shared_ptr<Lexing::Token> next_token() override;
+            std::shared_ptr<Lexing::Token> peek_token() override;
             ParserLexer &operator =(Parser::ParserLexer &&b) noexcept;
 
         private:

@@ -27,12 +27,12 @@ namespace Lexing {
         virtual ~Lexer()=default;
         virtual std::shared_ptr<Token> next_token();
         virtual std::shared_ptr<Token> peek_token();
-        virtual void gen_t_hook();
-        virtual void next_t_hook();
-        virtual void peek_t_hook();
 
     protected:
         void fill_buffer();
+        virtual void gen_t_hook();
+        virtual void next_t_hook();
+        virtual void peek_t_hook();
 
         std::shared_ptr<Token> t_buffer;
         std::ifstream reader;

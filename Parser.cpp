@@ -5,6 +5,7 @@
 #include "Parser.h"
 
 namespace Parsing {
+    // TODO: explain this array
     std::string Parser::mapping[] = {"INT_LIT", "IDENT", "", "ADD_OP", "SUB_OP", "MULT_OP", "DIV_OP", "LEFT_PAREN", "RIGHT_PAREN"};
     std::string Parser::nonterminalmapping[] = {"expr", "term", "factor"};
 
@@ -93,6 +94,7 @@ namespace Parsing {
     Parser::ParserLexer::ParserLexer(const std::string &read_fname, std::ofstream *write_file, Parser *outer) : Lexer(read_fname) {
         this->writer = write_file;
         this->outer = outer;
+        this->fill_buffer();
     }
 
     void Parser::ParserLexer::gen_t_hook() {
@@ -111,5 +113,15 @@ namespace Parsing {
     Parser::ParserLexer::ParserLexer() : Lexer() {
         this->outer = nullptr;
         this->writer = nullptr;
+    }
+
+    std::shared_ptr<Lexing::Token> Parser::ParserLexer::next_token() {
+        auto return_val = std::move(this->t_buffer);
+        this->fill_buffer();
+        return return_val;
+    }
+
+    std::shared_ptr<Lexing::Token> Parser::ParserLexer::peek_token() {
+        return this->t_buffer;
     }
 }
